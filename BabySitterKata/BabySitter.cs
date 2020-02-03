@@ -6,28 +6,45 @@ namespace BabySitterKata
 {
     public class BabySitter
     {
-        public bool ValidStartTime(TimeSpan startTime)
+        public bool ValidStartTime(DateTime startTime)
         {
             TimeSpan validStartTime = DateTime.Parse("5:00 PM").TimeOfDay;
-
-            if (startTime >= validStartTime)
+   
+            if (startTime.Date == DateTime.Today)
+            {
+                if (startTime.TimeOfDay >= validStartTime)
                 {
                     return true;
                 }
+            }
+        
             return false;
         }
 
-        public bool ValidEndTime(TimeSpan endTime)
+        public bool ValidEndTime(DateTime endTime)
         {
             TimeSpan validEndTime = DateTime.Parse("4:00 AM").TimeOfDay;
+            TimeSpan midnight = DateTime.Parse("11:59 PM").TimeOfDay;
 
-            if (endTime <= validEndTime)
+
+            if (endTime.Date == DateTime.Today.Date)
             {
-                return true;
+                if (endTime.TimeOfDay <= midnight)
+                {
+                    return true;
+                }
             }
+            else ///after midnight
+            {
+                if (endTime.TimeOfDay <= validEndTime)
+                {
+                    return true;
+                }
 
+            }
             return false;
         }
+
 
         public object OneFamilyPerNight(int numberOfFamilies)
         {
@@ -53,16 +70,30 @@ namespace BabySitterKata
 
         }
 
-        public bool StartTimeBeforeEndTime(TimeSpan startTime, TimeSpan endTime)
+        public bool StartTimeBeforeEndTime(DateTime startTime, DateTime endTime)
         {
+            TimeSpan midnight = DateTime.Parse("11:59 PM").TimeOfDay;
 
-            if (startTime < endTime)
+            // no start time before  5 pm which rules out after midnight
+            if (startTime.Date == DateTime.Today)
+            {
+                if (startTime.TimeOfDay < endTime.TimeOfDay)
+                {
+                    return true;
+                }
+            }
+           
+                return false;
+            
+        }
+
+        public bool AllowableWorkHours(DateTime startTime, DateTime endTime)
+        {
+            if (ValidStartTime(startTime) && ValidEndTime(endTime))
             {
                 return true;
             }
-
             return false;
-            
         }
     }
 }

@@ -15,16 +15,23 @@ namespace SitterTests
         public void StartTimeNoEarlierThan500PM()
         {
             //starts no earlier than 5:00PM     
-            TimeSpan startTime = DateTime.Parse("7:00 PM").TimeOfDay;
+            DateTime startTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 17, 20, 29);
             Assert.IsTrue(sitter.ValidStartTime(startTime));
+
         }
 
         [TestMethod]
-        public void EndTimeNoEarlierThan400AM()
+        public void EndTimeNoLaterThan400AM()
         {
-            //leaves no later than 4:00AM
-            TimeSpan endTime = DateTime.Parse("3:00 AM").TimeOfDay;
+            //leaves no later than 4:00AM 
+            //Same day test 6 pm
+            DateTime endTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 18, 20, 29);
             Assert.IsTrue(sitter.ValidEndTime(endTime));
+            
+            //After midnight test 2 AM
+            endTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day+1, 2, 20, 29);
+            Assert.IsTrue(sitter.ValidEndTime(endTime));
+         
         }
 
         [TestMethod]
@@ -44,11 +51,33 @@ namespace SitterTests
         [TestMethod]
         public void StartTimeBeforeEndTime()
         {
-            //should be prevented from mistakes when entering times(e.g.end time before start time, or outside of allowable work hours)
-            TimeSpan startTime = DateTime.Parse("7:00 PM").TimeOfDay;
-            TimeSpan endTime = DateTime.Parse("11:00 PM").TimeOfDay;
-
+            //test before midnight
+            DateTime startTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 7, 20, 29);
+            DateTime endTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 11, 20, 29);
             Assert.IsTrue(sitter.StartTimeBeforeEndTime(startTime,endTime));
+
+            //test after midnight
+            startTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 1, 20, 29);
+            endTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day+1, 3, 20, 29);
+            Assert.IsTrue(sitter.StartTimeBeforeEndTime(startTime, endTime));
+
+        }
+
+        [TestMethod]
+        public void AllowableWorkHours()
+        { 
+            //should be prevented from mistakes when entering times(e.g.end time before start time, or outside of allowable work hours)
+
+            ///test end time before midnight
+            DateTime startTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 17, 20, 29);
+            DateTime endTime =   new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 23, 20, 29);
+            Assert.IsTrue(sitter.AllowableWorkHours(startTime, endTime));
+
+            //test end time after midnight
+            startTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 17, 20, 29);
+            endTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day+1, 2, 20, 29);
+            Assert.IsTrue(sitter.AllowableWorkHours(startTime, endTime));
+
         }
 
 
