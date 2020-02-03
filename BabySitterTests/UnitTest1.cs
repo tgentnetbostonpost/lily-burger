@@ -17,7 +17,6 @@ namespace SitterTests
             //starts no earlier than 5:00PM     
             TimeSpan startTime = DateTime.Parse("7:00 PM").TimeOfDay;
             Assert.IsTrue(sitter.ValidStartTime(startTime));
-
         }
 
         [TestMethod]
@@ -40,6 +39,16 @@ namespace SitterTests
         {
             double hours = 8.00;
             Assert.AreEqual(0, sitter.PayRoundedUpToFullHour(hours));
+        }
+
+        [TestMethod]
+        public void StartTimeBeforeEndTime()
+        {
+            //should be prevented from mistakes when entering times(e.g.end time before start time, or outside of allowable work hours)
+            TimeSpan startTime = DateTime.Parse("7:00 PM").TimeOfDay;
+            TimeSpan endTime = DateTime.Parse("11:00 PM").TimeOfDay;
+
+            Assert.IsTrue(sitter.StartTimeBeforeEndTime(startTime,endTime));
         }
 
 

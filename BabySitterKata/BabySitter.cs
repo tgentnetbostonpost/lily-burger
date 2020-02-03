@@ -52,5 +52,17 @@ namespace BabySitterKata
 
 
         }
+
+        public bool StartTimeBeforeEndTime(TimeSpan startTime, TimeSpan endTime)
+        {
+
+            if (startTime < endTime)
+            {
+                return true;
+            }
+
+            return false;
+            
+        }
     }
 }
