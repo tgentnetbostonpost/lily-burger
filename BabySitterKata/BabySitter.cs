@@ -38,5 +38,19 @@ namespace BabySitterKata
             return 0;
 
         }
+
+        public double PayRoundedUpToFullHour(double hours)
+        {
+            if (hours % 1 > 0)
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+
+
+        }
     }
 }

@@ -35,6 +35,14 @@ namespace SitterTests
             Assert.AreEqual(1, sitter.OneFamilyPerNight(validNumOfFamilies));
         }
 
+        [TestMethod]
+        public void PayForFullHour ()
+        {
+            double hours = 8.00;
+            Assert.AreEqual(0, sitter.PayRoundedUpToFullHour(hours));
+        }
+
+
 
     }
 }
