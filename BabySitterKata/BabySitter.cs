@@ -40,7 +40,6 @@ namespace BabySitterKata
                 {
                     return true;
                 }
-
             }
             return false;
         }
@@ -53,10 +52,9 @@ namespace BabySitterKata
                 return 1;
             }
             return 0;
-
         }
 
-        public double PayRoundedUpToFullHour(double hours)
+        public double PayRoundedToFullHour(double hours)
         {
             if (hours % 1 > 0)
             {
@@ -66,8 +64,6 @@ namespace BabySitterKata
             {
                 return 0;
             }
-
-
         }
 
         public bool StartTimeBeforeEndTime(DateTime startTime, DateTime endTime)
@@ -81,10 +77,8 @@ namespace BabySitterKata
                 {
                     return true;
                 }
-            }
-           
+            }           
                 return false;
-            
         }
 
         public bool AllowableWorkHours(DateTime startTime, DateTime endTime)
@@ -94,6 +88,19 @@ namespace BabySitterKata
                 return true;
             }
             return false;
+        }
+
+        public double HoursBeforeMidnight(DateTime startTime, DateTime endTime)
+        {
+            // no start time before  5 pm which rules out after midnight
+            if (startTime.Date == DateTime.Today && startTime.Hour>=17)
+            {
+                return 24 - startTime.Hour;
+            }
+            else
+            {
+                return 0;
+            }
         }
     }
 }

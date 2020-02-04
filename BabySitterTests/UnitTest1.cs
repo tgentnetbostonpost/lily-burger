@@ -44,19 +44,25 @@ namespace SitterTests
         [TestMethod]
         public void PayForFullHour ()
         {
-            double hours = 8.00;
-            Assert.AreEqual(0, sitter.PayRoundedUpToFullHour(hours));
+            double hours = 8.23;
+
+            if (hours % 1 > 0)
+            {
+                hours = (int)hours;
+            }
+
+            Assert.AreEqual(0, sitter.PayRoundedToFullHour(hours));
         }
 
         [TestMethod]
         public void StartTimeBeforeEndTime()
         {
-            //test before midnight
+            //test start time before midnight
             DateTime startTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 7, 20, 29);
             DateTime endTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 11, 20, 29);
             Assert.IsTrue(sitter.StartTimeBeforeEndTime(startTime,endTime));
 
-            //test after midnight
+            //test start time after midnight
             startTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 1, 20, 29);
             endTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day+1, 3, 20, 29);
             Assert.IsTrue(sitter.StartTimeBeforeEndTime(startTime, endTime));
@@ -77,9 +83,28 @@ namespace SitterTests
             startTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 17, 20, 29);
             endTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day+1, 2, 20, 29);
             Assert.IsTrue(sitter.AllowableWorkHours(startTime, endTime));
-
         }
 
+
+        [TestMethod]
+        public void FamilyATotalPay()
+        {
+            //Family A pays $15 per hour before 11pm, and $20 per hour the rest of the night
+            //Starts at 6:23 pm ends at 2 am 
+            DateTime startTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 18, 23, 00);
+            DateTime endTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day + 1, 2, 20, 29);
+
+            double hoursBeforeMidnight = 0.0;
+            hoursBeforeMidnight = sitter.HoursBeforeMidnight(startTime, endTime);
+
+            Assert.IsTrue(sitter.AllowableWorkHours(startTime, endTime));
+            Assert.AreEqual(6, sitter.HoursBeforeMidnight(startTime,endTime));
+             
+          
+            
+
+
+        }
 
 
     }
