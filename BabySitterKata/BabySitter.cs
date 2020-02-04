@@ -8,12 +8,25 @@ namespace BabySitterKata
     {
 
         public int FamilyARateBefore11PM
-            {
-                get { return 15; }
-            }
+        {
+            get { return 15; }
+        }
         public int FamilyARateAfter11PM
         {
             get { return 20; }
+        }
+
+        public int FamilyBRateBefore10PM
+        {
+            get { return 12; }
+        }
+        public int FamilyBRateBetween10And12PM
+        {
+            get { return 8; }
+        }
+        public int FamilyBRateAfter12PM
+        {
+            get { return 16; }
         }
 
         public bool ValidStartTime(DateTime startTime)
@@ -26,8 +39,7 @@ namespace BabySitterKata
                 {
                     return true;
                 }
-            }
-        
+            }        
             return false;
         }
 
@@ -100,10 +112,10 @@ namespace BabySitterKata
             return false;
         }
 
-        public int HoursBefore11PM(DateTime startTime, DateTime endTime)
+        public int FamilyAHoursBefore11PM(DateTime startTime)
         {
             // no start time before  5 pm which rules out after midnight
-            if (startTime.Date == DateTime.Today && startTime.Hour>=17)
+            if (startTime.Hour>=17)
             {
                 return 23 - startTime.Hour;
             }
@@ -113,22 +125,90 @@ namespace BabySitterKata
             }
         }
 
-        public int HoursAfter11PM(DateTime startTime, DateTime endTime)
+        public int FamilyAHoursAfter11PM(DateTime startTime, DateTime endTime)
         {
-            // end time is after 11 PM only valid up to 4 am
-            if (endTime.Date == startTime.Date.AddDays(1))
+            int hours = 0;
+
+            //get 1 hour for start time day
+            if (startTime.Date < endTime.Date)
             {
-                return 5 - endTime.Hour;
+                hours = 1;
             }
-            else
+
+            //start time afer midnight
+            if (startTime.Date.AddDays(1)==endTime.Date)
             {
-                return 0;
+                hours = hours + (4 - endTime.Hour);
             }
+
+            return hours;
         }
 
         public int TotalPayFamilyA(int hoursBeforeElevenPM, int hoursAferElevenPM)
         {
-            return hoursBeforeElevenPM * FamilyARateBefore11PM + hoursAferElevenPM * FamilyARateAfter11PM;
+            if (hoursBeforeElevenPM == 0) { hoursBeforeElevenPM = 1; }
+            if (hoursAferElevenPM == 0) { hoursAferElevenPM = 1; }
+
+            return (hoursBeforeElevenPM * FamilyARateBefore11PM) + (hoursAferElevenPM * FamilyARateAfter11PM);
+        }
+
+        public int FamilyBHoursBefore10PM(DateTime startTime)
+        {
+            int hours = 0;
+
+            //same day
+            if (startTime.Hour >= 17)
+            {
+                hours= 22 - startTime.Hour;
+            }
+            else
+            {
+                hours = 0; 
+            }
+            return hours;  
+        }
+
+        public int FamilyBHoursBetween10And12PM(DateTime startTime, DateTime endTime)
+        {
+            int totalHours = 0;
+
+            //clocked in and out on same day
+            if (startTime.Date==endTime.Date && startTime.Hour>17 && endTime.Hour >= 22)
+            {
+                totalHours=endTime.Hour - 22;
+            }//clocked out next day
+            else if (startTime.Date<endTime.Date && startTime.Hour >=17) 
+            {
+                totalHours = 2;
+            }
+
+            return totalHours;
+
+        }
+
+        public int FamilyBHoursAfter12PM(DateTime startTime, DateTime endTime)
+        {
+            int hours = 0;
+            //same day
+            if (startTime.Date == endTime.Date)
+            {
+                hours = 0;
+            }
+            else if (startTime.Date < endTime.Date && endTime.Hour<=4)
+            {
+                hours = endTime.Hour;
+            }
+            return hours;
+        }
+
+        public int TotalPayFamilyB(int hoursBeforeTenPM, int hoursBetween10And12PM, int hoursAFter12PM)
+        {
+            //account for zero
+            if (hoursBeforeTenPM==0) { hoursBeforeTenPM = 1; }
+            if (hoursBetween10And12PM == 0) { hoursBetween10And12PM = 1; }
+            if (hoursAFter12PM == 0) { hoursAFter12PM = 1; }
+
+            return (hoursBeforeTenPM*FamilyBRateBefore10PM) + (hoursBetween10And12PM*FamilyBRateBetween10And12PM) + (hoursAFter12PM * FamilyBRateAfter12PM);
         }
     }
 }

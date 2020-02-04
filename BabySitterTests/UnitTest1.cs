@@ -94,20 +94,35 @@ namespace SitterTests
             DateTime startTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 18, 23, 00);
             DateTime endTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day + 1, 2, 20, 29);
 
-            Assert.IsTrue(sitter.AllowableWorkHours(startTime, endTime));
-            Assert.AreEqual(5, sitter.HoursBefore11PM(startTime,endTime));
-            Assert.AreEqual(3, sitter.HoursAfter11PM(startTime, endTime));
+            Assert.AreEqual(5, sitter.FamilyAHoursBefore11PM(startTime));
+            Assert.AreEqual(3, sitter.FamilyAHoursAfter11PM(startTime, endTime));
 
             int hoursBeforeElevenPM = 5;
             int hoursAferElevenPM = 3;
 
-            Assert.AreEqual(sitter.FamilyARateBefore11PM * hoursBeforeElevenPM, sitter.HoursBefore11PM(startTime, endTime) * sitter.FamilyARateBefore11PM);
-            Assert.AreEqual(sitter.FamilyARateAfter11PM * hoursAferElevenPM, sitter.HoursAfter11PM(startTime, endTime) * sitter.FamilyARateAfter11PM);
+            Assert.AreEqual(sitter.FamilyARateBefore11PM * hoursBeforeElevenPM, sitter.FamilyAHoursBefore11PM(startTime) * sitter.FamilyARateBefore11PM);
+            Assert.AreEqual(sitter.FamilyARateAfter11PM * hoursAferElevenPM, sitter.FamilyAHoursAfter11PM(startTime, endTime) * sitter.FamilyARateAfter11PM);
 
             Assert.AreEqual(135, sitter.TotalPayFamilyA(hoursBeforeElevenPM, hoursAferElevenPM));
+        }
 
+        [TestMethod]
+        public void FamilyBTotalPay()
+        {
+            //Family B pays $12 per hour before 10pm, $8 between 10 and 12, and $16 the rest of the night
+            //Starts at 6:23 pm ends at 2 am 
+            DateTime startTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 18, 23, 00);
+            DateTime endTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day + 1, 2, 20, 29);
 
+            int hoursBeforeTenPM = 4;
+            int hoursBetween10And12PM = 2;
+            int hoursAFer12PM = 2;
 
+            Assert.AreEqual(hoursBeforeTenPM, sitter.FamilyBHoursBefore10PM(startTime));
+            Assert.AreEqual(hoursBetween10And12PM, sitter.FamilyBHoursBetween10And12PM(startTime, endTime));
+            Assert.AreEqual(hoursAFer12PM, sitter.FamilyBHoursAfter12PM(startTime, endTime));
+
+            Assert.AreEqual(96, sitter.TotalPayFamilyB(hoursBeforeTenPM, hoursBetween10And12PM, hoursAFer12PM));
         }
 
 
