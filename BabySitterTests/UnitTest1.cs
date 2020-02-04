@@ -94,14 +94,18 @@ namespace SitterTests
             DateTime startTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 18, 23, 00);
             DateTime endTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day + 1, 2, 20, 29);
 
-            double hoursBeforeMidnight = 0.0;
-            hoursBeforeMidnight = sitter.HoursBeforeMidnight(startTime, endTime);
-
             Assert.IsTrue(sitter.AllowableWorkHours(startTime, endTime));
-            Assert.AreEqual(6, sitter.HoursBeforeMidnight(startTime,endTime));
-             
-          
-            
+            Assert.AreEqual(5, sitter.HoursBefore11PM(startTime,endTime));
+            Assert.AreEqual(3, sitter.HoursAfter11PM(startTime, endTime));
+
+            int hoursBeforeElevenPM = 5;
+            int hoursAferElevenPM = 3;
+
+            Assert.AreEqual(sitter.FamilyARateBefore11PM * hoursBeforeElevenPM, sitter.HoursBefore11PM(startTime, endTime) * sitter.FamilyARateBefore11PM);
+            Assert.AreEqual(sitter.FamilyARateAfter11PM * hoursAferElevenPM, sitter.HoursAfter11PM(startTime, endTime) * sitter.FamilyARateAfter11PM);
+
+            Assert.AreEqual(135, sitter.TotalPayFamilyA(hoursBeforeElevenPM, hoursAferElevenPM));
+
 
 
         }

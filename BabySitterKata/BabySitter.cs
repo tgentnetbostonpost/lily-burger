@@ -6,6 +6,16 @@ namespace BabySitterKata
 {
     public class BabySitter
     {
+
+        public int FamilyARateBefore11PM
+            {
+                get { return 15; }
+            }
+        public int FamilyARateAfter11PM
+        {
+            get { return 20; }
+        }
+
         public bool ValidStartTime(DateTime startTime)
         {
             TimeSpan validStartTime = DateTime.Parse("5:00 PM").TimeOfDay;
@@ -90,17 +100,35 @@ namespace BabySitterKata
             return false;
         }
 
-        public double HoursBeforeMidnight(DateTime startTime, DateTime endTime)
+        public int HoursBefore11PM(DateTime startTime, DateTime endTime)
         {
             // no start time before  5 pm which rules out after midnight
             if (startTime.Date == DateTime.Today && startTime.Hour>=17)
             {
-                return 24 - startTime.Hour;
+                return 23 - startTime.Hour;
             }
             else
             {
                 return 0;
             }
+        }
+
+        public int HoursAfter11PM(DateTime startTime, DateTime endTime)
+        {
+            // end time is after 11 PM only valid up to 4 am
+            if (endTime.Date == startTime.Date.AddDays(1))
+            {
+                return 5 - endTime.Hour;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        public int TotalPayFamilyA(int hoursBeforeElevenPM, int hoursAferElevenPM)
+        {
+            return hoursBeforeElevenPM * FamilyARateBefore11PM + hoursAferElevenPM * FamilyARateAfter11PM;
         }
     }
 }
