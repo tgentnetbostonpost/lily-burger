@@ -29,6 +29,15 @@ namespace BabySitterKata
             get { return 16; }
         }
 
+        public int FamilyCRateBefore9PM
+        {
+            get { return 21; }
+        }
+        public int FamilyCRateAfter9PM
+        {
+            get { return 15; }
+        }
+
         public bool ValidStartTime(DateTime startTime)
         {
             TimeSpan validStartTime = DateTime.Parse("5:00 PM").TimeOfDay;
@@ -209,6 +218,51 @@ namespace BabySitterKata
             if (hoursAFter12PM == 0) { hoursAFter12PM = 1; }
 
             return (hoursBeforeTenPM*FamilyBRateBefore10PM) + (hoursBetween10And12PM*FamilyBRateBetween10And12PM) + (hoursAFter12PM * FamilyBRateAfter12PM);
+        }
+
+        public int FamilyCHoursBeforeNinePM(DateTime startTime)
+        {
+            int hours = 0;
+
+            //same day
+            if (startTime.Hour >= 17)
+            {
+                hours = 21 - startTime.Hour;
+            }
+            else
+            {
+                hours = 0;
+            }
+            return hours;
+        }
+
+        public int FamilyCHoursAfterNinePM(DateTime startTime, DateTime endTime)
+        {
+            int hours = 0;
+            //before midnight hours
+            if (startTime.Date == endTime.Date && startTime.Hour>=17)
+            {
+                hours = endTime.Hour-21;
+            }
+
+            //after midnight hours
+           else  if (startTime.Date < endTime.Date && startTime.Hour >= 17)
+            {
+                hours = 3 + endTime.Hour;
+            }
+            return hours;
+        }
+
+
+
+        public int TotalPayFamilyC(int hoursBeforeNinePM, int hoursAfterNinePM)
+        {
+            //account for zero
+            if (hoursBeforeNinePM == 0) { hoursBeforeNinePM = 1; }
+            if (hoursAfterNinePM == 0) { hoursAfterNinePM = 1; }
+
+            return (hoursBeforeNinePM * FamilyCRateBefore9PM) + (hoursAfterNinePM * FamilyCRateAfter9PM);
+
         }
     }
 }

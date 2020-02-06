@@ -126,5 +126,23 @@ namespace SitterTests
         }
 
 
+        [TestMethod]
+        public void FamilyCTotalPay()
+        {
+            //Family C pays $21 per hour before 9pm, then $15 the rest of the night
+            
+            DateTime startTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 18, 23, 00);
+            DateTime endTime = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day + 1, 2, 20, 29);
+
+            int hoursBeforeNinePM = 3;
+            int hoursAfterNinePM = 5;
+  
+            Assert.AreEqual(hoursBeforeNinePM, sitter.FamilyCHoursBeforeNinePM(startTime));
+            Assert.AreEqual(hoursAfterNinePM, sitter.FamilyCHoursAfterNinePM(startTime, endTime));
+  
+            Assert.AreEqual(138, sitter.TotalPayFamilyC(hoursBeforeNinePM, hoursAfterNinePM));
+        }
+
+
     }
 }
